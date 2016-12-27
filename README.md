@@ -17,12 +17,13 @@ socat -ddd -v TCP4-LISTEN:5556,fork,reuseaddr \
 
 ## 在 windows 平台上建立一个文本文档另存为 xx.bat
 内容：
+```
 @echo off
 set BLACK=D:\bill\socat-win\socat.exe STDIO tcp-connect:192.168.1.146:5566
 set WHITE=D:\bill\windowsplayer.exe
 set TWOGTP=""D:\bill\OneDrive\Documents\Computer Go\GoAI\GoGui\gogui-twogtp"" -black ""%BLACK%"" -white ""%WHITE%"" -size 19
 "D:\bill\OneDrive\Documents\Computer Go\GoAI\GoGui\gogui" -program "%TWOGTP%" -size 19 -computer-both -verbose
-
+```
 ###解释：
 set BLACK 一行设置 执黑者程序地址，如果通过 socat 与 linux 通信则需修改 socat.exe的路径和ip 地址及端口； 
 set WHITE 一行设置 执白者程序地址，若是 windows 本地程序，则只需指定路径即可。最后一行需要指定 gogui 的路径，其他参数不用修改。
