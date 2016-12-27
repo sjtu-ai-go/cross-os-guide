@@ -1,6 +1,5 @@
 # cross-os-guide
-本教程主要针对跨系统运行Go AI程序的问题
-
+本教程主要针对跨系统运行Go AI程序的问题 （基于洛神的修改版）
 ## Gogui在Windows上
 > 本段介绍如何在Windows的Gogui上对战来自Windows或Linux的AI
 
@@ -8,25 +7,36 @@
  - 本项目`socat-win/`下的所有文件
  - （Win下选手的ai-win.exe）
  
-同时，Linux选手在Gogui的同一子网的另一台Linux电脑上，安装`socat`软件（`sudo apt-get install socat`)，之后运行：
+同时，Linux选手在另一台Linux电脑上，安装`socat`软件（`sudo apt-get install socat`)，之后运行：
 ```bash
 socat -ddd -v TCP4-LISTEN:5556,fork,reuseaddr \ 
        SYSTEM:"启动你的程序的命令"
 ```
 然后运行`ip addr`来查看本机IP地址
 
-之后，在Gogui的Program - New Program中，填写：
+
+## 在 windows 平台上建立一个文本文档另存为 xx.bat
+内容：
 ```
-command = 
-"C:\Program Files\GoGui\gogui-twogtp.exe" -black ai-win.exe -white "socat.exe STDIO tcp-connect:Linux的IP地址:5556" -verbose
-
-working dir=
-存放ai-win.exe的目录
+@echo off
+set BLACK=D:\bill\socat-win\socat.exe STDIO tcp-connect:192.168.1.146:5566
+set WHITE=D:\bill\windowsplayer.exe
+set TWOGTP=""D:\bill\OneDrive\Documents\Computer Go\GoAI\GoGui\gogui-twogtp"" -black ""%BLACK%"" -white ""%WHITE%"" -size 19
+"D:\bill\OneDrive\Documents\Computer Go\GoAI\GoGui\gogui" -program "%TWOGTP%" -size 19 -computer-both -verbose
 ```
+###解释：
+set BLACK 一行设置 执黑者程序地址，如果通过 socat 与 linux 通信则需修改 socat.exe的路径和ip 地址及端口； 
 
-之后即可让ai-win作为黑，ai-linux作为白对战。同理也可以两个ai-linux对战，只要把`-black ai-win.exe`换成`-black "socat.exe ..."`即可
 
-原理图：
+set WHITE 一行设置 执白者程序地址，若是 windows 本地程序，则只需指定路径即可。最后一行需要指定 gogui 的路径，其他参数不用修改。
+
+
+若双方都是 windows 程序亦可参考此流程进行自动对战。
+
+
+然后双击 bat 即可进行对战。
+
+####socat原理图：
 ```
                                             /<---- [ Black commands ] --[ STDIO ] ---> ai-win.exe
 Gogui <----[ STDIO ] ----> gogui-twogtp.exe
